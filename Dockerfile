@@ -20,13 +20,16 @@ RUN apk update && \
 RUN addgroup -S wellnest && adduser -S wellnest -G wellnest
 
 COPY --from=builder /app/dist /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/nginx.conf
 
 RUN chown -R wellnest:wellnest /usr/share/nginx/html && \
     chown -R wellnest:wellnest /var/cache/nginx && \
     chown -R wellnest:wellnest /var/log/nginx && \
-    touch /var/run/nginx.pid && \
-    chown -R wellnest:wellnest /var/run/nginx.pid
+    chown -R wellnest:wellnest /etc/nginx/conf.d && \
+    mkdir -p /tmp/client_temp /tmp/proxy_temp /tmp/fastcgi_temp \
+             /tmp/uwsgi_temp /tmp/scgi_temp && \
+    chown -R wellnest:wellnest /tmp/client_temp /tmp/proxy_temp \
+             /tmp/fastcgi_temp /tmp/uwsgi_temp /tmp/scgi_temp
 
 USER wellnest
 
